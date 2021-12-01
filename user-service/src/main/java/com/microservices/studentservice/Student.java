@@ -2,14 +2,16 @@ package com.microservices.studentservice;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Student {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String firstName;
 	private String lastName;
 
@@ -20,6 +22,10 @@ public class Student {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getFirstName() {

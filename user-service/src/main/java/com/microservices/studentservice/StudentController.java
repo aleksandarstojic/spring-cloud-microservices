@@ -20,13 +20,20 @@ public class StudentController {
 	StudentService studentService;
 
 	@GetMapping("students")
-	public List<Student> getAllStudents() {
-		return studentService.getAllStudents();
+	public ResponseEntity getAllStudents() {
+		return new ResponseEntity<>(studentService.getAllStudents(), HttpStatus.OK);
 	}
 
 	@GetMapping("students/{id}")
-	public Optional<Student> getStudent(@PathVariable long id) {
-		return studentService.getStudent(id);
+	public ResponseEntity getStudent(@PathVariable long id) {
+		try {
+		Student student = studentService.getStudent(id);
+		return new ResponseEntity<Student>(student, HttpStatus.OK);
+		}
+		catch (StudentNotFoundException snfe) {
+			String msg = snfe.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PostMapping("students")
@@ -36,8 +43,12 @@ public class StudentController {
 	}
 
 	@DeleteMapping("students/{id}")
-	public ResponseEntity<Student> removeStudent(@PathVariable long id) {
+	public ResponseEntity removeStudent(@PathVariable long id) {
+		try {
 		studentService.deleteStudent(id);
 		return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("Student with the id " + id + " does not exsist.", HttpStatus.NOT_FOUND);
+		}
 	}
 }

@@ -1,3 +1,3 @@
-INSERT INTO Student VALUES (1, 'Aleksandar', 'Stojic');
-INSERT INTO Student VALUES (2, 'Nikola', 'Savic');
-INSERT INTO Student VALUES (3, 'Ivan', 'Jura');
+INSERT INTO Student VALUES (100, 'Aleksandar', 'Stojic');
+INSERT INTO Student VALUES (101, 'Nikola', 'Savic');
+INSERT INTO Student VALUES (102, 'Ivan', 'Jura');
