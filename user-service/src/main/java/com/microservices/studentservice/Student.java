@@ -1,18 +1,25 @@
 package com.microservices.studentservice;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Student {
+
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String firstName;
 	private String lastName;
-	private int studentCardId;
 
 	public Student() {
 	}
 
-	public Student(String firstName, String lastName, int studentCardId) {
+	public Student(String firstName, String lastName) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.studentCardId = studentCardId;
 	}
 
 	public String getFirstName() {
@@ -30,13 +37,4 @@ public class Student {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-	public int getStudentCardId() {
-		return studentCardId;
-	}
-
-	public void setStudentCardId(int studentCardId) {
-		this.studentCardId = studentCardId;
-	}
-
 }
