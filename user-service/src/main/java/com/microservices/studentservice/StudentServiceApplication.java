@@ -1,13 +1,13 @@
-package com.microservices.userservice;
+package com.microservices.studentservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UserServiceApplication {
+public class StudentServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UserServiceApplication.class, args);
+		SpringApplication.run(StudentServiceApplication.class, args);
 	}
 
 }
