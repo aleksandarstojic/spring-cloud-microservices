@@ -60,4 +60,12 @@ public class StudentCourseService {
 		return studentCourseRepository.save(new StudentCourse(studentId, courseId));
 	}
 
+	public void deleteStudentCourse(long studentId, long courseId) {
+		Optional<StudentCourse> entity = studentCourseRepository.findByStudentIdAndCourseId(studentId, courseId);
+		if (entity.isEmpty()) {
+            throw new RuntimeException("Student-Course not found");
+        } else {
+        	studentCourseRepository.delete(entity.get());
+        }
+	}
 }
