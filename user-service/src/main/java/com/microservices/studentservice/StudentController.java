@@ -18,9 +18,6 @@ public class StudentController {
 
 	@Autowired
 	StudentService studentService;
-	
-	//@Autowired
-	//private CourseProxy courseProxy;
 
 	@GetMapping("students")
 	public ResponseEntity getAllStudents() {
