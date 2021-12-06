@@ -40,7 +40,7 @@ public class DepartmentController {
 		try {
 			Department newDepartment = departmentService.createDepartment(department);
 			return new ResponseEntity<>(newDepartment, HttpStatus.CREATED);
-		} catch (DepartmentAlreadyExistsException daee) {
+		} catch (RuntimeException daee) {
 			String msg = daee.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
