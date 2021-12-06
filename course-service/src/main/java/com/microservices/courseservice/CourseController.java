@@ -37,8 +37,8 @@ public class CourseController {
 		try {
 			Course newCourse = courseService.createCourse(course);
 			return new ResponseEntity<>(newCourse, HttpStatus.CREATED);
-		} catch (CourseAlreadyExistsException caee) {
-			String msg = caee.getMessage();
+		} catch (RuntimeException re) {
+			String msg = re.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 

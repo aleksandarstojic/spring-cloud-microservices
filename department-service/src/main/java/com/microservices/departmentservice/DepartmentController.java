@@ -40,8 +40,8 @@ public class DepartmentController {
 		try {
 			Department newDepartment = departmentService.createDepartment(department);
 			return new ResponseEntity<>(newDepartment, HttpStatus.CREATED);
-		} catch (RuntimeException daee) {
-			String msg = daee.getMessage();
+		} catch (RuntimeException re) {
+			String msg = re.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 	}

@@ -15,13 +15,16 @@ public class Course {
 	private Long id;
 
 	private String courseName;
+	
+	private Long departmentId;
 
 	public Course() {
 	}
 	
-	public Course(String courseName) {
+	public Course(String courseName, long departmentId) {
 		super();
 		this.courseName = courseName;
+		this.departmentId = departmentId;
 	}
 
 	public String getCourseName() {
@@ -34,5 +37,13 @@ public class Course {
 
 	public Long getId() {
 		return id;
+	}
+	
+	public Long getDepartmentId() {
+		return departmentId;
+	}
+
+	public void setDepartmentId(Long departmentId) {
+		this.departmentId = departmentId;
 	}
 }

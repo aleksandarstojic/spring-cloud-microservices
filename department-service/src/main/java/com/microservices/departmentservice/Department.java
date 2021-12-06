@@ -12,14 +12,14 @@ public class Department {
 	private Long id;
 
 	private String name;
-	
+
 	private Long facultyId;
-	
+
 	public Department() {
-		
+
 	}
 
-	public Department (Long id, String name, Long facultyId) {
+	public Department(Long id, String name, Long facultyId) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -45,5 +45,4 @@ public class Department {
 	public void setFacultyId(Long facultyId) {
 		this.facultyId = facultyId;
 	}
-	
 }
