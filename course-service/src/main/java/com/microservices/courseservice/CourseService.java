@@ -18,6 +18,9 @@ public class CourseService {
 
 	@Autowired
 	private RestTemplate restTemplate = this.restTemplate();
+	
+	@Autowired
+	DepartmentProxy departmentProxy;
 
 	@Bean
 	public RestTemplate restTemplate() {
@@ -35,13 +38,11 @@ public class CourseService {
 		}
 		return course.get();
 	}
-
+	
 	public Course createCourse(Course course) {
-//		ResponseEntity<StudentDTO> studentResponseEntity = restTemplate
-//      .getForEntity("http://student-service/students/{id}", StudentDTO.class, studentId);
-		ResponseEntity<DepartmentDTO> departmentResponseEntity = restTemplate
-				.getForEntity("http://localhost:8500/departments/{id}", DepartmentDTO.class, course.getDepartmentId());
-		if (departmentResponseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
+		DepartmentDTO departmentDTO = departmentProxy.getDepartment(course.getDepartmentId());
+		
+		if (departmentDTO == null) {
 			throw new EntityNotFoundException("Department with the given id does not exist.");
 		}
 
@@ -50,6 +51,7 @@ public class CourseService {
 			throw new CourseAlreadyExistsException("Course with the id " + course.getId() + " already exists.");
 		}
 		return courseRepository.save(course);
+
 	}
 
 	public void deleteCourse(long id) {

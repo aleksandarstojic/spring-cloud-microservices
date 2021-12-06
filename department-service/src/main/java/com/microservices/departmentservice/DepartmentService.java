@@ -26,6 +26,9 @@ public class DepartmentService {
 		return new RestTemplate();
 	}
 
+	@Autowired
+	FacultyProxy facultyProxy;
+	
 	public List<Department> getAllDepartments() {
 		return departmentRepository.findAll();
 	}
@@ -39,11 +42,9 @@ public class DepartmentService {
 	}
 
 	public Department createDepartment(Department department) {
-//		ResponseEntity<StudentDTO> studentResponseEntity = restTemplate
-//      .getForEntity("http://student-service/students/{id}", StudentDTO.class, studentId);
-		ResponseEntity<FacultyDTO> facultyResponseEntity = restTemplate
-				.getForEntity("http://localhost:8400/faculties/{id}", FacultyDTO.class, department.getFacultyId());
-		if (facultyResponseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
+		FacultyDTO facultyDTO = facultyProxy.getFaculty(department.getFacultyId());
+		
+		if (facultyDTO == null) {
 			throw new EntityNotFoundException("Faculty with the given id does not exist.");
 		}
 
@@ -58,7 +59,7 @@ public class DepartmentService {
 	public void removeDepartment(long id) {
 		Optional<Department> entity = departmentRepository.findById(id);
 		if (entity.isEmpty()) {
-			throw new DepartmentNotFoundException("Department not found");
+			throw new DepartmentNotFoundException("Department with the id " + id + " does not exist.");
 		} else {
 			departmentRepository.delete(entity.get());
 		}

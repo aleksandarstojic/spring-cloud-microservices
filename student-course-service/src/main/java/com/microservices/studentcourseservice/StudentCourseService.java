@@ -18,6 +18,12 @@ public class StudentCourseService {
 
 	@Autowired
 	private RestTemplate restTemplate = this.restTemplate();
+	
+	@Autowired
+	StudentProxy studentProxy;
+	
+	@Autowired
+	CourseProxy courseProxy;
 
 	@Bean
 	public RestTemplate restTemplate() {
@@ -46,20 +52,13 @@ public class StudentCourseService {
 
 	public StudentCourse addStudentCourse(long studentId, long courseId) {
 
-//		ResponseEntity<StudentDTO> studentResponseEntity = restTemplate
-//                .getForEntity("http://student-service/students/{id}", StudentDTO.class, studentId);
-		ResponseEntity<StudentDTO> studentResponseEntity = restTemplate
-				.getForEntity("http://localhost:8000/students/{id}", StudentDTO.class, studentId);
-		if (studentResponseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
+		StudentDTO studentDTO = studentProxy.getStudent(studentId);
+		if (studentDTO == null) {
 			throw new EntityNotFoundException("Student with the given id does not exist.");
 		}
 
-//        ResponseEntity<CourseDTO> courseResponseEntity = restTemplate
-//                .getForEntity("http://course-service/students/{id}", CourseDTO.class, courseId);
-		ResponseEntity<CourseDTO> courseResponseEntity = restTemplate
-				.getForEntity("http://localhost:8100/courses/{id}", CourseDTO.class, courseId);
-
-		if (courseResponseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
+		CourseDTO courseDTO = courseProxy.getCourse(courseId);
+		if (courseDTO == null) {
 			throw new EntityNotFoundException("Course with the given id does not exist.");
 		}
 
