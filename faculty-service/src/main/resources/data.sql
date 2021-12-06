@@ -1,0 +1,3 @@
+INSERT INTO faculty VALUES (100, 'FTN');
+INSERT INTO faculty VALUES (101, 'PMF');
+INSERT INTO faculty VALUES (102, 'Pravni');
