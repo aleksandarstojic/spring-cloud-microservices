@@ -37,9 +37,14 @@ public class StudentController {
 	}
 
 	@PostMapping("students")
-	public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+	public ResponseEntity createStudent(@RequestBody Student student) {
+		try {
 		Student newStudent = studentService.createStudent(student);
 		return new ResponseEntity<>(newStudent, HttpStatus.CREATED);
+		} catch (StudentAlreadyExistsException saee) {
+			String msg = saee.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@DeleteMapping("students/{id}")
@@ -47,8 +52,9 @@ public class StudentController {
 		try {
 		studentService.deleteStudent(id);
 		return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("Student with the id " + id + " does not exsist.", HttpStatus.NOT_FOUND);
+		} catch (StudentNotFoundException snfe) {
+			String msg = snfe.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 	}
 }

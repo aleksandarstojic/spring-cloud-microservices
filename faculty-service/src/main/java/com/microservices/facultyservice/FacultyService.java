@@ -19,7 +19,7 @@ public class FacultyService {
 	public Faculty getFaculty(long id) {
 		Optional<Faculty> faculty = facultyRepository.findById(id);
 		if (faculty.isEmpty()) {
-			throw new RuntimeException("Faculty with the id " + id + " does not exsist.");
+			throw new FacultyNotFoundException("Faculty with the id " + id + " does not exsist.");
 		}
 		return faculty.get();
 	}
@@ -27,7 +27,7 @@ public class FacultyService {
 	public Faculty createFaculty(Faculty faculty) {
 		Optional<Faculty> existingFaculty = facultyRepository.findById(faculty.getId());
 		if(existingFaculty.isPresent()) {
-			throw new RuntimeException("Faculty with the id " + faculty.getId() + " already exists.");
+			throw new FacultyAlreadyExistsException("Faculty with the id " + faculty.getId() + " already exists.");
 		}
 		return facultyRepository.save(faculty);
 	}
@@ -35,7 +35,7 @@ public class FacultyService {
 	public void removeFaculty(long id) {
 		Optional<Faculty> entity = facultyRepository.findById(id);
 		if (entity.isEmpty()) {
-            throw new RuntimeException("Faculty not found");
+            throw new FacultyNotFoundException("Faculty with id " + id + " does not exist.");
         } else {
         	facultyRepository.delete(entity.get());
         }

@@ -26,16 +26,21 @@ public class FacultyController {
 			Faculty faculty = facultyService.getFaculty(id);
 		return new ResponseEntity<Faculty>(faculty, HttpStatus.OK);
 		}
-		catch (RuntimeException snfe) {
+		catch (FacultyNotFoundException snfe) {
 			String msg = snfe.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@PostMapping("faculties")
-	public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+	public ResponseEntity createFaculty(@RequestBody Faculty faculty) {
+		try {
 		Faculty newFaculty = facultyService.createFaculty(faculty);
 		return new ResponseEntity<>(newFaculty, HttpStatus.CREATED);
+		} catch (FacultyAlreadyExistsException faee) {
+			String msg = faee.getMessage();
+			return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@DeleteMapping("faculties/{id}")
@@ -43,8 +48,9 @@ public class FacultyController {
 		try {
 			facultyService.removeFaculty(id);
 		return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("Faculty with the id " + id + " does not exsist.", HttpStatus.NOT_FOUND);
+		} catch (FacultyNotFoundException faee) {
+			String msg = faee.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 	}
 }

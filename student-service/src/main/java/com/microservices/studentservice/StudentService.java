@@ -35,6 +35,10 @@ public class StudentService {
 	}
 	
 	public void deleteStudent(long id) {
+		Optional<Student> existingStudent = studentRepository.findById(id);
+		if(existingStudent.isEmpty()) {
+			throw new StudentNotFoundException("Student with the id " + id + " does not exsist.");
+		}
 		studentRepository.deleteById(id);
 	}
 }

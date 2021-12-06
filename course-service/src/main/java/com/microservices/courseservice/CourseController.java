@@ -24,28 +24,34 @@ public class CourseController {
 	@GetMapping("courses/{id}")
 	public ResponseEntity getCourse(@PathVariable long id) {
 		try {
-		Course course = courseService.getCourse(id);
-		return new ResponseEntity<Course>(course, HttpStatus.OK);
-		}
-		catch (CourseNotFoundException cnfe) {
+			Course course = courseService.getCourse(id);
+			return new ResponseEntity<Course>(course, HttpStatus.OK);
+		} catch (CourseNotFoundException cnfe) {
 			String msg = cnfe.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@PostMapping("courses")
-	public ResponseEntity<Course> createCourse(@RequestBody Course course) {
-		Course newCourse = courseService.createCourse(course);
-		return new ResponseEntity<>(newCourse, HttpStatus.CREATED);
+	public ResponseEntity createCourse(@RequestBody Course course) {
+		try {
+			Course newCourse = courseService.createCourse(course);
+			return new ResponseEntity<>(newCourse, HttpStatus.CREATED);
+		} catch (CourseAlreadyExistsException caee) {
+			String msg = caee.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 	@DeleteMapping("courses/{id}")
 	public ResponseEntity removeStudent(@PathVariable long id) {
 		try {
 			courseService.deleteCourse(id);
-		return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("Course with the id " + id + " does not exsist.", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (CourseNotFoundException cnfe) {
+			String msg = cnfe.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 	}
 }

@@ -27,27 +27,33 @@ public class DepartmentController {
 	public ResponseEntity getDepartment(@PathVariable long id) {
 		try {
 			Department department = departmentService.getDepartment(id);
-		return new ResponseEntity<Department>(department, HttpStatus.OK);
-		}
-		catch (RuntimeException snfe) {
-			String msg = snfe.getMessage();
+			return new ResponseEntity<Department>(department, HttpStatus.OK);
+		} catch (DepartmentNotFoundException dnfe) {
+			String msg = dnfe.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@PostMapping("departments")
-	public ResponseEntity<Department> createDepartment(@RequestBody Department department) {
-		Department newDepartment = departmentService.createDepartment(department);
-		return new ResponseEntity<>(newDepartment, HttpStatus.CREATED);
+	public ResponseEntity createDepartment(@RequestBody Department department) {
+
+		try {
+			Department newDepartment = departmentService.createDepartment(department);
+			return new ResponseEntity<>(newDepartment, HttpStatus.CREATED);
+		} catch (DepartmentAlreadyExistsException daee) {
+			String msg = daee.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@DeleteMapping("departments/{id}")
 	public ResponseEntity removeDepartment(@PathVariable long id) {
 		try {
 			departmentService.removeDepartment(id);
-		return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("Department with the id " + id + " does not exsist.", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (DepartmentNotFoundException dnfe) {
+			String msg = dnfe.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 	}
 }

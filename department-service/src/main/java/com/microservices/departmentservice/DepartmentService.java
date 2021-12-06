@@ -21,7 +21,7 @@ public class DepartmentService {
 	public Department getDepartment(long id) {
 		Optional<Department> department = departmentRepository.findById(id);
 		if (department.isEmpty()) {
-			throw new RuntimeException("Department with the id " + id + " does not exsist.");
+			throw new DepartmentNotFoundException("Department with the id " + id + " does not exsist.");
 		}
 		return department.get();
 	}
@@ -29,7 +29,7 @@ public class DepartmentService {
 	public Department createDepartment(Department department) {
 		Optional<Department> existingDepartment = departmentRepository.findById(department.getId());
 		if(existingDepartment.isPresent()) {
-			throw new RuntimeException("Department with the id " + department.getId() + " already exists.");
+			throw new DepartmentAlreadyExistsException("Department with the id " + department.getId() + " already exists.");
 		}
 		return departmentRepository.save(department);
 	}
@@ -37,7 +37,7 @@ public class DepartmentService {
 	public void removeDepartment(long id) {
 		Optional<Department> entity = departmentRepository.findById(id);
 		if (entity.isEmpty()) {
-            throw new RuntimeException("Department not found");
+            throw new DepartmentNotFoundException("Department not found");
         } else {
         	departmentRepository.delete(entity.get());
         }

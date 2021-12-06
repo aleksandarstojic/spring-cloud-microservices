@@ -33,6 +33,10 @@ public class CourseService {
 	}
 
 	public void deleteCourse(long id) {
+		Optional<Course> existingCourse = courseRepository.findById(id);
+		if(existingCourse.isEmpty()) {
+			throw new CourseNotFoundException("Course with the id " + id + " does not exsist.");
+		}
 		courseRepository.deleteById(id);
 	}
 }
