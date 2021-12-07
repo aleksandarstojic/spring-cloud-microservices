@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 
 @RestController
 @CircuitBreaker(name = "default", fallbackMethod = "fallback")
+@RateLimiter(name="default")
 public class StudentCourseController {
 
 	@Autowired
