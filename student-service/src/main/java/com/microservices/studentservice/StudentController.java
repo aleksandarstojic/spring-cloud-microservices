@@ -17,7 +17,6 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 @CircuitBreaker(name = "default", fallbackMethod = "fallback")
 @RateLimiter(name = "default")
 public class StudentController {
-
 	@Autowired
 	StudentService studentService;
 
