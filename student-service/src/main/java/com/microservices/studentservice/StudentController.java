@@ -1,8 +1,5 @@
 package com.microservices.studentservice;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
+@CircuitBreaker(name = "default", fallbackMethod = "fallback")
 public class StudentController {
 
 	@Autowired
 	StudentService studentService;
-
+	
 	@GetMapping("students")
 	public ResponseEntity getAllStudents() {
 		return new ResponseEntity<>(studentService.getAllStudents(), HttpStatus.OK);
@@ -56,5 +56,9 @@ public class StudentController {
 			String msg = snfe.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	public ResponseEntity fallback(RuntimeException e) {
+	    return new ResponseEntity<String>("Student service is taking too long to respond. Please try again later.", HttpStatus.SERVICE_UNAVAILABLE);
 	}
 }

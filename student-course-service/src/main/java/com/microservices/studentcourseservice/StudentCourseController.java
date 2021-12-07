@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @RestController
+@CircuitBreaker(name = "default", fallbackMethod = "fallback")
 public class StudentCourseController {
 
 	@Autowired
@@ -66,4 +68,8 @@ public class StudentCourseController {
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
     }
+    
+    public ResponseEntity fallback(RuntimeException e) {
+	    return new ResponseEntity<String>("Student-Course service is taking too long to respond. Please try again later.", HttpStatus.SERVICE_UNAVAILABLE);
+	}
 }

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservices.departmentservice.Department;
-import com.microservices.departmentservice.DepartmentService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @RestController
+@CircuitBreaker(name="default", fallbackMethod="fallback")
 public class DepartmentController {
 	@Autowired
 	DepartmentService departmentService;
@@ -55,5 +55,9 @@ public class DepartmentController {
 			String msg = dnfe.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	public ResponseEntity fallback(RuntimeException e) {
+	    return new ResponseEntity<String>("Department service is taking too long to respond. Please try again later.", HttpStatus.SERVICE_UNAVAILABLE);
 	}
 }
