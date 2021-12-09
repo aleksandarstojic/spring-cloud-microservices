@@ -1,0 +1,123 @@
+version: '3.7'
+
+services:
+  config-server:
+    image: astojic/dis-config-server:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8888:8888"
+    networks:
+      - microservices-network
+
+  service-registry:
+    image: astojic/dis-service-registry:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+    environment:
+      SPRING.CONFIG.IMPORT: optional:configserver:http://config-server:8888
+
+  student-service:
+    image: astojic/dis-student-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+      - service-registry
+    environment:
+      SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+
+  course-service:
+    image: astojic/dis-course-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8100:8100"
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+      - service-registry
+    environment:
+      SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+
+  student-course-service:
+    image: astojic/dis-student-course-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8200:8200"
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+      - service-registry
+    environment:
+      SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+
+  department-service:
+    image: astojic/dis-department-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8300:8300"
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+      - service-registry
+    environment:
+      SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+
+  faculty-service:
+    image: astojic/dis-faculty-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8400:8400"
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+      - service-registry
+    environment:
+      SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+
+  api-gateway:
+    image: astojic/dis-api-gateway:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8765:8765"
+    networks:
+      - microservices-network
+    depends_on:
+      - config-server
+      - service-registry
+    environment:
+      SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+
+  zipkin-server:
+    image: openzipkin/zipkin:latest
+    mem_limit: 300m
+    ports:
+      - "9411:9411"
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
