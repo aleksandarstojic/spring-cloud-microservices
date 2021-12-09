@@ -31,10 +31,14 @@ services:
     depends_on:
       - config-server
       - service-registry
+      - rabbitmq
     environment:
       SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
       eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
       SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
 
   course-service:
     image: astojic/dis-course-service:0.0.1-SNAPSHOT
@@ -46,10 +50,14 @@ services:
     depends_on:
       - config-server
       - service-registry
+      - rabbitmq
     environment:
       SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
       eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
       SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
 
   student-course-service:
     image: astojic/dis-student-course-service:0.0.1-SNAPSHOT
@@ -61,10 +69,14 @@ services:
     depends_on:
       - config-server
       - service-registry
+      - rabbitmq
     environment:
       SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
       eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
       SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
 
   department-service:
     image: astojic/dis-department-service:0.0.1-SNAPSHOT
@@ -76,10 +88,14 @@ services:
     depends_on:
       - config-server
       - service-registry
+      - rabbitmq
     environment:
       SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
       eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
       SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
 
   faculty-service:
     image: astojic/dis-faculty-service:0.0.1-SNAPSHOT
@@ -91,10 +107,14 @@ services:
     depends_on:
       - config-server
       - service-registry
+      - rabbitmq
     environment:
       SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
       eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
       SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
 
   api-gateway:
     image: astojic/dis-api-gateway:0.0.1-SNAPSHOT
@@ -106,16 +126,34 @@ services:
     depends_on:
       - config-server
       - service-registry
+      - rabbitmq
     environment:
       SPRING.CONFIG.IMPORT: configserver:http://config-server:8888
       eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
       SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
 
   zipkin-server:
     image: openzipkin/zipkin:latest
     mem_limit: 300m
     ports:
       - "9411:9411"
+    networks:
+      - microservices-network
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+    restart: always #Restart if there is a problem starting up
+
+  rabbitmq:
+    image: rabbitmq:latest
+    mem_limit: 300m
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     networks:
       - microservices-network
 
